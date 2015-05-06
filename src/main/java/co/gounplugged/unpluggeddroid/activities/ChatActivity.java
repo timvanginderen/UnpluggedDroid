@@ -2,6 +2,7 @@ package co.gounplugged.unpluggeddroid.activities;
 
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
@@ -12,6 +13,9 @@ import android.view.DragEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.jensdriller.libs.undobar.UndoBar;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,7 +62,7 @@ public class ChatActivity extends ActionBarActivity {
     SmsBroadcastReceiver smsBroadcastReceiver;
 
     private Conversation mSelectedConversation;
-    private Conversation mClickedConversation;  //TODO refactor global var
+    private Conversation mClickedConversation;
 
     private ConversationContainer.ConversationListener conversationListener = new ConversationContainer.ConversationListener() {
 
@@ -109,10 +113,14 @@ public class ChatActivity extends ActionBarActivity {
     }
 
     @Override
-    protected synchronized void onResume() {
+    protected void onResume() {
     	super.onResume();
         mConversationContainer.setConversationListener(conversationListener);
-
+        try {
+            getLastSelectedConversation();
+        } catch (NotFoundInDatabaseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -173,8 +181,36 @@ public class ChatActivity extends ActionBarActivity {
                         break;
                     case DragEvent.ACTION_DROP:
                         Log.i(TAG, "Conversation dropped on mImageViewDropZoneDelete.");
-                        Collection<Message> messages = new ArrayList<>();
-                        mChatArrayAdapter.setMessages(new ArrayList<>(messages));
+
+                        //Remove from convo from container
+                        final int index = mConversationContainer.removeConversation(mClickedConversation);
+
+                        //Show previous conversation
+                        try {
+                            getLastSelectedConversation();
+                        } catch (NotFoundInDatabaseException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        String name = mClickedConversation.getParticipant() == null ? "No contact!" : mClickedConversation.getParticipant().getName();
+                        new UndoBar.Builder(ChatActivity.this)
+                                .setMessage(name + " \'s chat deleted.")
+                                .setListener(new UndoBar.Listener() {
+                                    @Override
+                                    public void onHide() {
+                                        //Finally remove conversation from cache
+                                        Log.i(TAG, "onHide UndoBar: deleting conversation " + mClickedConversation.toString());
+                                        mClickedConversation.delete(getApplicationContext());
+                                    }
+
+                                    @Override
+                                    public void onUndo(Parcelable parcelable) {
+                                        mConversationContainer.addConversation(index, mClickedConversation);
+                                    }
+                                })
+                                .setAlignParentBottom(false) // TODO make this shit work (don't stick to bottom)
+                                .show();
                         break;
                 }
                 return true;

@@ -69,9 +69,30 @@ public class ConversationAdapter extends BaseAdapter {
         return convertView;
     }
 
+    /**
+     * @param conversation to be added to the list
+     */
     public void addConversation(Conversation conversation) {
-        mConversations.add(conversation);
+        addConversation(-1, conversation);
+    }
+    public void addConversation(int index, Conversation conversation) {
+        if (index == -1)
+            mConversations.add(conversation);
+        else
+            mConversations.add(index, conversation);
+
         notifyDataSetChanged();
+    }
+
+    /**
+     * @param conversation to be removed
+     * @return index of the conversation in the list
+     */
+    public int removeConversation(Conversation conversation) {
+        int index = mConversations.indexOf(conversation);
+        mConversations.remove(conversation);
+        notifyDataSetChanged();
+        return index;
     }
 
     public static class ViewHolder {

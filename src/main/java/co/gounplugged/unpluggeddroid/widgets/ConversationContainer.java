@@ -103,7 +103,18 @@ public class ConversationContainer extends LinearLayout {
     }
 
     public void addConversation(Conversation conversation) {
-        mAdapter.addConversation(conversation);
+        addConversation(-1, conversation);
+    }
+
+    public void addConversation(int index, Conversation conversation) {
+        if (index == -1)
+            mAdapter.addConversation(conversation);
+        else
+            mAdapter.addConversation(index, conversation);
+    }
+
+    public int removeConversation(Conversation conversation) {
+        return mAdapter.removeConversation(conversation);
     }
 
 

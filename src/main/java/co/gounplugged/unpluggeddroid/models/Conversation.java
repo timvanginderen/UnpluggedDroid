@@ -145,4 +145,9 @@ public class Conversation {
 
         return builder.toString();
     }
+
+    public int delete(Context context) {
+        DatabaseAccess<Conversation> databaseAccess = new DatabaseAccess<>(context, Conversation.class);
+        return databaseAccess.delete(this);
+    }
 }
