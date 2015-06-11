@@ -18,7 +18,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.+'
     compile 'com.mcxiaoke.volley:library:1.0.15'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.j256.ormlite:ormlite-core:4.48'
+    compile 'com.j256.ormlite:ormlite-core:4.43'
     compile files('libs/sqlcipher.jar')
     compile files('libs/guava-r09.jar')
     compile files('libs/commons-codec.jar')

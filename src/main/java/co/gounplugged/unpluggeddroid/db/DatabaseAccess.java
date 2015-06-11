@@ -28,7 +28,7 @@ public class DatabaseAccess<T> {
     private static final int DATABASE_VERSION = 1;
 
     private Dao<T, Long> mDao;
-    private static DatabaseHelper mHelper;
+    private DatabaseHelper mHelper;
 
     public DatabaseAccess(Context context, Class<T> type) {
         try {
@@ -39,7 +39,7 @@ public class DatabaseAccess<T> {
         }
     }
 
-    private static DatabaseHelper getDatabaseHelperInstance(Context context) {
+    private DatabaseHelper getDatabaseHelperInstance(Context context) {
         if (mHelper == null) {
             mHelper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
         }
@@ -146,39 +146,4 @@ public class DatabaseAccess<T> {
         }
         return 0;
     }
-
-    public static class DatabaseHelper extends OrmLiteSqliteOpenHelper {
-
-        Context mContext;
-
-        public DatabaseHelper(Context context) {
-            super(context, DATABASE_NAME, null, DATABASE_VERSION, "password");
-            mContext = context;
-        }
-
-        @Override
-        public void onCreate(net.sqlcipher.database.SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource) {
-            createDatabases(sqLiteDatabase, connectionSource, mContext);
-        }
-
-        private void createDatabases(net.sqlcipher.database.SQLiteDatabase db, ConnectionSource connectionSource, Context context) {
-            Class<?>[] columns = {Conversation.class, Message.class, Mask.class, Contact.class};
-            try {
-                for (Class<?> c : columns) {
-                    TableUtils.createTable(connectionSource, c);
-                }
-            } catch (SQLException e) {
-                Log.e(DatabaseHelper.class.getName()," - Can't create database", e);
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        public void onUpgrade(net.sqlcipher.database.SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int i, int i1) {
-//            if (oldVersion < 2) {
-//                db.execSQL("ALTER TABLE \'blabla\' ADD COLUMN \'blabla\' BIGINT DEFAULT 0");
-//            }
-        }
-    }
-
 }
