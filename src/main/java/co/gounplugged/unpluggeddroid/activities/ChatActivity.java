@@ -2,6 +2,7 @@ package co.gounplugged.unpluggeddroid.activities;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,6 +18,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+
+import net.sqlcipher.database.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -103,6 +106,16 @@ public class ChatActivity extends BaseActivity {
         getLastSelectedConversation();
         mChatArrayAdapter = new MessageAdapter(this, mSelectedConversation);
     	loadGui();
+
+
+        SQLiteDatabase.loadLibs(this);
+        SQLiteDatabase database = SQLiteDatabase.openOrCreateDatabase(":memory:", "Password1!", null);
+        Cursor cursor = database.rawQuery("PRAGMA cipher_version;", null);
+        cursor.moveToFirst();
+        String version = cursor.getString(0);
+        Log.i(TAG, String.format("SQLCipher version:%s", version));
+        cursor.close();
+        database.close();
 
     }
 
