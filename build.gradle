@@ -20,12 +20,22 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.15'
     compile 'com.squareup.picasso:picasso:2.5.2'
     testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-core:1.9.5"
+    testCompile 'org.mockito:mockito-core:1.9.5'
+    compile files('libs/sqlcipher.jar')
+    compile files('libs/guava-r09.jar')
+    compile files('libs/commons-codec.jar')
 }
 
 android {
     compileSdkVersion 21
     buildToolsVersion "22.0.1"
+
+    sourceSets {
+        main {
+            jniLibs.srcDir file('src/main/jniLibs')
+            assets.srcDirs = ['src/main/assets']
+        }
+    }
 
     lintOptions {
         abortOnError false
