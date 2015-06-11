@@ -152,16 +152,16 @@ public class DatabaseAccess<T> {
         Context mContext;
 
         public DatabaseHelper(Context context) {
-            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+            super(context, DATABASE_NAME, null, DATABASE_VERSION, "password");
             mContext = context;
         }
 
         @Override
-        public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
-            createDatabases(db, connectionSource, mContext);
+        public void onCreate(net.sqlcipher.database.SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource) {
+            createDatabases(sqLiteDatabase, connectionSource, mContext);
         }
 
-        private void createDatabases(SQLiteDatabase db, ConnectionSource connectionSource, Context context) {
+        private void createDatabases(net.sqlcipher.database.SQLiteDatabase db, ConnectionSource connectionSource, Context context) {
             Class<?>[] columns = {Conversation.class, Message.class, Mask.class, Contact.class};
             try {
                 for (Class<?> c : columns) {
@@ -174,7 +174,7 @@ public class DatabaseAccess<T> {
         }
 
         @Override
-        public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
+        public void onUpgrade(net.sqlcipher.database.SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int i, int i1) {
 //            if (oldVersion < 2) {
 //                db.execSQL("ALTER TABLE \'blabla\' ADD COLUMN \'blabla\' BIGINT DEFAULT 0");
 //            }
