@@ -17,6 +17,9 @@ import android.widget.ToggleButton;
 
 import co.gounplugged.unpluggeddroid.R;
 import co.gounplugged.unpluggeddroid.application.BaseApplication;
+import co.gounplugged.unpluggeddroid.db.DatabaseAccess;
+import co.gounplugged.unpluggeddroid.exceptions.InvalidPhoneNumberException;
+import co.gounplugged.unpluggeddroid.models.Mask;
 import co.gounplugged.unpluggeddroid.models.Profile;
 
 public class ProfileActivity extends BaseActivity {
@@ -36,6 +39,24 @@ public class ProfileActivity extends BaseActivity {
         setupPhoneNumber();
         setupSmsPlan();
         submitButton = (Button) findViewById(R.id.submit_phone_number_activity_profile);
+
+
+
+        //Test code
+        DatabaseAccess<Mask> databaseAccess  = new DatabaseAccess<>(getApplicationContext(), Mask.class);
+        Mask mask = null;
+        try {
+            mask = new Mask("+32475932921");
+        } catch (InvalidPhoneNumberException e) {
+            e.printStackTrace();
+        }
+        if (mask != null) {
+            databaseAccess.create(mask);
+        }
+
+        databaseAccess.getAll();
+
+
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
