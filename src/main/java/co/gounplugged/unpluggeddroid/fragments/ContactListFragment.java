@@ -22,6 +22,7 @@ import co.gounplugged.unpluggeddroid.models.Conversation;
 import co.gounplugged.unpluggeddroid.utils.ContactUtil;
 import co.gounplugged.unpluggeddroid.utils.ConversationUtil;
 import de.greenrobot.event.EventBus;
+import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
 
 public class ContactListFragment  extends Fragment implements AdapterView.OnItemClickListener{
     private final static String TAG = "ContactListFragment";
@@ -34,15 +35,20 @@ public class ContactListFragment  extends Fragment implements AdapterView.OnItem
                 R.layout.fragment_contact_list, container, false);
 
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.recyclerview);
-        setupRecyclerView(rv);
+
+        VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) view.findViewById(R.id.fast_scroller);
+
+        // Connect the recycler to the scroller (to let the scroller scroll the list)
+        fastScroller.setRecyclerView(rv);
+
+        // Connect the scroller to the recycler (to let the recycler scroll the scroller's handle)
+        rv.setOnScrollListener(fastScroller.getOnScrollListener());
+
+        rv.setLayoutManager(new LinearLayoutManager(rv.getContext()));
+        rv.setAdapter(new ContactRecyclerViewAdapter(getActivity(), ContactUtil.getCachedContacts(getActivity().getApplicationContext())));
+
         return view;
     }
-
-    private void setupRecyclerView(RecyclerView recyclerView) {
-        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-        recyclerView.setAdapter(new ContactRecyclerViewAdapter(getActivity(), ContactUtil.getCachedContacts(getActivity().getApplicationContext())));
-    }
-
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -88,35 +94,5 @@ public class ContactListFragment  extends Fragment implements AdapterView.OnItem
         mContactAdapter.filter(query);
     }
 
-
-
-
-
-//    private class LoadCachedContacts extends AsyncTask<Void, Void, List<Contact>> {
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-////            setListShown(false);
-//        }
-//
-//        @Override
-//        protected List<Contact> doInBackground(Void... params) {
-//            return ContactUtil.getCachedContacts(getActivity().getApplicationContext());
-//        }
-//
-//        @Override
-//        protected void onPostExecute(List<Contact> contacts) {
-//            super.onPostExecute(contacts);
-//
-//            mContactAdapter = new ContactAdapter(getActivity().getApplicationContext(), contacts);
-//            setListAdapter(mContactAdapter);
-//
-//            //setup listview
-//            getListView().setFastScrollEnabled(true);
-//            getListView().setOnItemClickListener(ContactListFragment.this);
-//
-////            setListShown(true);
-//        }
-//    }
 }
 
