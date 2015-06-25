@@ -1,7 +1,5 @@
 package co.gounplugged.unpluggeddroid.fragments;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,10 +20,8 @@ import co.gounplugged.unpluggeddroid.application.BaseApplication;
 import co.gounplugged.unpluggeddroid.exceptions.InvalidRecipientException;
 import co.gounplugged.unpluggeddroid.models.Contact;
 import co.gounplugged.unpluggeddroid.models.Conversation;
-import co.gounplugged.unpluggeddroid.models.Message;
 import co.gounplugged.unpluggeddroid.services.OpenPGPBridgeService;
 import co.gounplugged.unpluggeddroid.utils.ImageUtil;
-import de.greenrobot.event.EventBus;
 
 public class MessageInputFragment extends Fragment {
     private static final String TAG = "MessageInputFragment";
@@ -40,27 +36,12 @@ public class MessageInputFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-//        EventBus.getDefault().removeAllStickyEvents();
-//        EventBus.getDefault().unregister(this);
     }
-
-//    public void onEventMainThread(ConversationEvent event) {
-////        switch (event.getType()) {
-////            case SELECTED:
-////                break;
-////            case SWITCHED:
-////                setSubmitButtonImage(event.getConversation());
-////                setHint(event.getConversation());
-////                break;
-////        }
-//
-//    }
 
     public void updateViews() {
         final Conversation lastConversation = getLastConversation();
