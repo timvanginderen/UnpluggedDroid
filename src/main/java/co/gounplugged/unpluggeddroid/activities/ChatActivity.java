@@ -1,6 +1,9 @@
 package co.gounplugged.unpluggeddroid.activities;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -35,11 +38,14 @@ import co.gounplugged.unpluggeddroid.models.Profile;
 import co.gounplugged.unpluggeddroid.services.OpenPGPBridgeService;
 import co.gounplugged.unpluggeddroid.utils.ContactUtil;
 import co.gounplugged.unpluggeddroid.utils.ConversationUtil;
+import co.gounplugged.unpluggeddroid.utils.MessageUtil;
+import co.gounplugged.unpluggeddroid.utils.NotificationHelper;
 import de.greenrobot.event.EventBus;
 
 
 public class ChatActivity extends BaseActivity {
 
+    private static final int NOTIFICATION_ID = 001;
     // Debug
     private final String TAG = "ChatActivity";
 
@@ -147,6 +153,22 @@ public class ChatActivity extends BaseActivity {
         super.onResume();
         EventBus.getDefault().removeStickyEvent(Message.class);
         EventBus.getDefault().registerSticky(this);
+
+        Conversation c = null;
+        try {
+            c = ConversationUtil.findById(this, 1);
+        } catch (NotFoundInDatabaseException e) {
+            e.printStackTrace();
+        }
+        Message message = MessageUtil.create(this, c, "Dit is example text", Message.TYPE_INCOMING,
+                System.currentTimeMillis());
+        Notification notification = NotificationHelper.buildIncomingMessageNotification(this, message);
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // mId allows you to update the notification later on.
+        mNotificationManager.notify(NOTIFICATION_ID, notification);
+
     }
 
     @Override
