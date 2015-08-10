@@ -154,20 +154,20 @@ public class ChatActivity extends BaseActivity {
         EventBus.getDefault().removeStickyEvent(Message.class);
         EventBus.getDefault().registerSticky(this);
 
-        Conversation c = null;
-        try {
-            c = ConversationUtil.findById(this, 1);
-        } catch (NotFoundInDatabaseException e) {
-            e.printStackTrace();
-        }
-        Message message = MessageUtil.create(this, c, "Dit is example text", Message.TYPE_INCOMING,
-                System.currentTimeMillis());
-        Notification notification = NotificationHelper.buildIncomingMessageNotification(this, message);
-
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        // mId allows you to update the notification later on.
-        mNotificationManager.notify(NOTIFICATION_ID, notification);
+//        Conversation c = null;
+//        try {
+//            c = ConversationUtil.findById(this, 6);
+//        } catch (NotFoundInDatabaseException e) {
+//            e.printStackTrace();
+//        }
+//        Message message = MessageUtil.create(this, c, "Dit is example text", Message.TYPE_INCOMING,
+//                System.currentTimeMillis());
+//        Notification notification = NotificationHelper.buildIncomingMessageNotification(this, message);
+//
+//        NotificationManager mNotificationManager =
+//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//        // mId allows you to update the notification later on.
+//        mNotificationManager.notify(NOTIFICATION_ID, notification);
 
     }
 

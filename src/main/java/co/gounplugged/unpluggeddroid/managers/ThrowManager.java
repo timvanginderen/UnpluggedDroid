@@ -1,6 +1,8 @@
 package co.gounplugged.unpluggeddroid.managers;
 
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.telephony.SmsMessage;
 import android.util.Log;
@@ -26,6 +28,7 @@ import co.gounplugged.unpluggeddroid.utils.ContactUtil;
 import co.gounplugged.unpluggeddroid.utils.ConversationUtil;
 import co.gounplugged.unpluggeddroid.utils.MaskUtil;
 import co.gounplugged.unpluggeddroid.utils.MessageUtil;
+import co.gounplugged.unpluggeddroid.utils.NotificationHelper;
 import co.gounplugged.unpluggeddroid.utils.SMSUtil;
 import de.greenrobot.event.EventBus;
 
@@ -121,7 +124,7 @@ public class ThrowManager {
             Contact trueOriginatorContact = getBaseApplication().getSecondLine().getKreweUnderstanding(thrownFromMask);
             Conversation conversation = ConversationUtil.findOrNew(trueOriginatorContact, mContext);
             String content =  MessageThrow.getContent(decryptedContent);
-            addTextToConversation(content, conversation);
+            receiveMessage(content, conversation);
         } catch (SecondLine.SecondLineException e) {
             // TODO don't know sent this to you.
             Log.d(TAG, "processMessageThrow: SecondLineException");
@@ -168,7 +171,7 @@ public class ThrowManager {
             // TODO can participant ever be null?
         }
 
-        addTextToConversation(concatenatedText, conversation);
+        receiveMessage(concatenatedText, conversation);
     }
 
     /**
@@ -295,13 +298,20 @@ public class ThrowManager {
      * @param text
      * @param conversation
      */
-    private void addTextToConversation(String text, Conversation conversation) {
+    private void receiveMessage(String text, Conversation conversation) {
         Message message = MessageUtil.create(
                 mContext,
                 conversation,
                 text,
                 Message.TYPE_INCOMING,
                 System.currentTimeMillis());
+
+        //add notification
+        Notification notification = NotificationHelper.buildIncomingMessageNotification(mContext, message);
+        NotificationManager mNotificationManager =
+        (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        // mId allows you to update the notification later on.
+        mNotificationManager.notify(001, notification);
 
         EventBus.getDefault().postSticky(message);
         Log.d(TAG, "Received message: " + message);

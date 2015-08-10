@@ -115,9 +115,9 @@ public class MessageInputFragment extends Fragment {
                 String conversationName = lastConversation.getName();
                 hint = (getString(R.string.new_post_text_hint)) + " " + conversationName;
             }
-
         }
-        newPostText.setHint(hint);
+        if (newPostText != null)
+            newPostText.setHint(hint);
 
     }
 

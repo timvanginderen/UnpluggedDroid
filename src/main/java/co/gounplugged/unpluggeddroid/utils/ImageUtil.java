@@ -41,18 +41,6 @@ public class ImageUtil {
         return drawable;
     }
 
-//    public static Bitmap getBitmapFromUri(Context context, Uri uri) {
-//        Bitmap bitmap = null;
-//        try {
-//            bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
-//            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),imageUri);
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return bitmap;
-//    }
-
     public static RoundedBitmapDrawable getCircularDrawable(Context context, Bitmap bitmap) {
         RoundedBitmapDrawable circularBitmapDrawable = //
                 RoundedBitmapDrawableFactory.create(context.getResources(), bitmap);
@@ -82,6 +70,14 @@ public class ImageUtil {
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
         return bitmap;
+    }
+
+    public static Bitmap getRoundedContactBitmap(Context context, Contact contact) {
+        Drawable drawable = getDrawableFromUri(context, contact.getImageUri());
+        Bitmap bitmap = drawableToBitmap(drawable);
+        RoundedBitmapDrawable roundedBitmapDrawable = getCircularDrawable(context, bitmap);
+        return drawableToBitmap(roundedBitmapDrawable);
+
     }
 
 }
