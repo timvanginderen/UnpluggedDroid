@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -27,6 +28,7 @@ import co.gounplugged.unpluggeddroid.R;
 import co.gounplugged.unpluggeddroid.adapters.ContactRecyclerViewAdapter;
 import co.gounplugged.unpluggeddroid.adapters.MessageRecyclerViewAdapter;
 import co.gounplugged.unpluggeddroid.application.BaseApplication;
+import co.gounplugged.unpluggeddroid.db.ConversationDatabaseAccess;
 import co.gounplugged.unpluggeddroid.exceptions.NotFoundInDatabaseException;
 import co.gounplugged.unpluggeddroid.fragments.MessageInputFragment;
 import co.gounplugged.unpluggeddroid.fragments.SearchContactFragment;
@@ -46,6 +48,8 @@ import de.greenrobot.event.EventBus;
 public class ChatActivity extends BaseActivity {
 
     private static final int NOTIFICATION_ID = 001;
+    public static final String EXTRA_CONVERSATION_ID = "ChatActivity.EXTRA_CONVERSATION_ID";
+
     // Debug
     private final String TAG = "ChatActivity";
 
@@ -138,6 +142,21 @@ public class ChatActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
 
+        Conversation c = null;
+        try {
+            c = ConversationUtil.findById(this, 1);
+        } catch (NotFoundInDatabaseException e) {
+            e.printStackTrace();
+        }
+        Message message = MessageUtil.create(this, c, "Dit is example text", Message.TYPE_INCOMING,
+                System.currentTimeMillis());
+        Notification notification = NotificationHelper.buildIncomingMessageNotification(this, message);
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // mId allows you to update the notification later on.
+        mNotificationManager.notify(NOTIFICATION_ID, notification);
+
         Log.d(TAG, "onStart");
     }
 
@@ -154,6 +173,19 @@ public class ChatActivity extends BaseActivity {
         EventBus.getDefault().removeStickyEvent(Message.class);
         EventBus.getDefault().registerSticky(this);
 
+
+        long conversationId = getIntent().getLongExtra(EXTRA_CONVERSATION_ID, -1);
+        if (conversationId == -1)
+            return;
+
+
+        //don't re-fetch if conversation is already loaded
+        if (mSelectedConversation != null && mSelectedConversation.getId() == conversationId)
+            return;
+
+        mSelectedConversation = fetchConversation(conversationId);
+
+
 //        Conversation c = null;
 //        try {
 //            c = ConversationUtil.findById(this, 6);
@@ -169,6 +201,18 @@ public class ChatActivity extends BaseActivity {
 //        // mId allows you to update the notification later on.
 //        mNotificationManager.notify(NOTIFICATION_ID, notification);
 
+    }
+
+    private Conversation fetchConversation(long conversationId) {
+        ConversationDatabaseAccess databaseAccess = new ConversationDatabaseAccess(getApplicationContext());
+        return databaseAccess.getById(conversationId);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        // getIntent() should always return the most recent
+        setIntent(intent);
     }
 
     @Override
@@ -327,7 +371,7 @@ public class ChatActivity extends BaseActivity {
         establishSecondLine(newConversation);
 
         mSelectedConversation = newConversation;
-        Profile.setLastConversationId(mSelectedConversation.id);
+        Profile.setLastConversationId(mSelectedConversation.getId());
 
         //update ui with new convo
         updateActivityViews();

@@ -47,7 +47,7 @@ public class ConversationRecyclerViewAdapter extends RecyclerView.Adapter<Conver
         final Conversation conversation = mConversations.get(position);
 
         holder.mConversationName.setText(conversation.getName());
-        holder.mImageView.setTag(String.valueOf(conversation.id));
+        holder.mImageView.setTag(String.valueOf(conversation.getId()));
 
     }
 

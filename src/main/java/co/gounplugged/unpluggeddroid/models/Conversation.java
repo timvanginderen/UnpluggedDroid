@@ -16,17 +16,17 @@ public class Conversation {
     public static final String PARTICIPANT_ID_FIELD_NAME = "contact_id";
 
     @DatabaseField(generatedId = true)
-    public long id;
+    private long id;
 
     @ForeignCollectionField
     private Collection<Message> mMessages;
 
     @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = PARTICIPANT_ID_FIELD_NAME, maxForeignAutoRefreshLevel = 3)
     private final Contact mParticipant;
+
     public Contact getParticipant() {
         return mParticipant;
     }
-
     public Conversation() {
         // all persisted classes must define a no-arg constructor with at least package visibility
         this.mParticipant = null;
@@ -77,9 +77,17 @@ public class Conversation {
         return getParticipant().usesSecondLine();
     }
 
-
     public String getName() {
         return (getParticipant() == null) ? "" : getParticipant().getName();
+    }
+
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public class InvalidConversationException extends Exception {

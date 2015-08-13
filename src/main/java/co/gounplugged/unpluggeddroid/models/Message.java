@@ -75,7 +75,7 @@ public class Message {
                 .append("\n")
                 .append("type: " + (mType == 1 ? "incoming" : "outgoing"))
                 .append("\n")
-                .append("conversation: " + mConversation.id)
+                .append("conversation: " + mConversation.getId())
                 .append("\n")
                 .append("participant: " + mConversation.getParticipant().id)
                 .append("\n")

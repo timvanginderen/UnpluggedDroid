@@ -139,7 +139,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     if (intent != null) {
                         long conversationId = intent.getLongExtra(EXTRA_CONVERSATION_ID, -1);
                         Conversation selectedConversation = Predicate.select(conversations, new ConversationIdPredicate(conversationId));
-                        Profile.setLastConversationId(selectedConversation.id);
+                        Profile.setLastConversationId(selectedConversation.getId());
                         //bring conversation to top in menu
                         mApplication.removeRecentConversation(selectedConversation);
                         mApplication.addRecentConversation(selectedConversation);
@@ -178,7 +178,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
         // instead of launching a new instance all other activities on top of it will be closed
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra(EXTRA_CONVERSATION_ID, conversation.id);
+        intent.putExtra(EXTRA_CONVERSATION_ID, conversation.getId());
         item.setIntent(intent);
     }
 

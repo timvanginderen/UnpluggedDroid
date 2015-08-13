@@ -12,6 +12,6 @@ public class ConversationIdPredicate implements IPredicate<Conversation> {
 
     @Override
     public boolean apply(Conversation conversation) {
-        return conversation.id == mId;
+        return conversation.getId() == mId;
     }
 }

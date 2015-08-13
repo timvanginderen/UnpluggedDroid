@@ -97,7 +97,7 @@ public class ConversationAdapter extends BaseAdapter {
         public ViewHolder(View v, Conversation conversation) {
             mConversation = conversation;
             mImageView = (CircleImageView) v.findViewById(R.id.conversation_icon);
-            mImageView.setTag(String.valueOf(conversation.id));
+            mImageView.setTag(String.valueOf(conversation.getId()));
             mConversationName = (TextView) v.findViewById(R.id.conversation_name);
             mConversationName.setText(conversation.getName());
         }
