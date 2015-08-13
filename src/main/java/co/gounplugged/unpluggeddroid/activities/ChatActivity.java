@@ -93,6 +93,13 @@ public class ChatActivity extends BaseActivity {
     private String mSavedQuery = null;
 
 
+    public static Intent newLaunchIntent(Context context) {
+        Intent intent = new Intent(context, ChatActivity.class);
+        // instead of launching a new instance all other activities on top of it will be closed
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        return intent;
+    }
+
     /*
         Return the last selected conversation. Null if no last conversation.
      */
@@ -184,6 +191,7 @@ public class ChatActivity extends BaseActivity {
             return;
 
         mSelectedConversation = fetchConversation(conversationId);
+        updateActivityViews();
 
 
 //        Conversation c = null;

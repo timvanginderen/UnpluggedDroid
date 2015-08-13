@@ -121,9 +121,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     menuItem.setChecked(true);
                     switch (menuItem.getItemId()) {
                         case R.id.nav_home:
-                            Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
+                            startActivity(ChatActivity.newLaunchIntent(getApplicationContext()));
                             break;
                         case R.id.nav_settings:
                             Intent intent1 = new Intent(getApplicationContext(), PreferencesActivity.class);
@@ -175,9 +173,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         mConversationSubMenu.add(NAVIGATION_GROUP_ID_CONVERSATIONS, Menu.NONE, mConversationSubMenu.size(), conversation.getName());
         MenuItem item  = mConversationSubMenu.getItem(mConversationSubMenu.size() - 1);
         item.setIcon(ImageUtil.getDrawableFromUri(getApplicationContext(), conversation.getParticipant().getImageUri()));
-        Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-        // instead of launching a new instance all other activities on top of it will be closed
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Intent intent = ChatActivity.newLaunchIntent(getApplicationContext());
         intent.putExtra(EXTRA_CONVERSATION_ID, conversation.getId());
         item.setIntent(intent);
     }

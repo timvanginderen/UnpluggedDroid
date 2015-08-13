@@ -98,6 +98,10 @@ public class Contact {
         this.mLookupKey = lookupKey;
     }
 
+    public String getLookupKey() {
+        return mLookupKey;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Contact))

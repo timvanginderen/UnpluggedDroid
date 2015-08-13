@@ -42,7 +42,7 @@ public class ImageUtil {
     }
 
     public static RoundedBitmapDrawable getCircularDrawable(Context context, Bitmap bitmap) {
-        RoundedBitmapDrawable circularBitmapDrawable = //
+        RoundedBitmapDrawable circularBitmapDrawable =
                 RoundedBitmapDrawableFactory.create(context.getResources(), bitmap);
 
         circularBitmapDrawable.setCornerRadius(bitmap.getWidth());
@@ -50,15 +50,19 @@ public class ImageUtil {
         return circularBitmapDrawable;
     }
 
+    public static Bitmap getCircularBitmap(Context context, Bitmap bitmap) {
+        return drawableToBitmap(getCircularDrawable(context, bitmap));
+    }
+
     public static Bitmap drawableToBitmap (Drawable drawable) {
         Bitmap bitmap = null;
 
-        if (drawable instanceof BitmapDrawable) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            if(bitmapDrawable.getBitmap() != null) {
-                return bitmapDrawable.getBitmap();
-            }
-        }
+//        if (drawable instanceof BitmapDrawable) {
+//            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+//            if(bitmapDrawable.getBitmap() != null) {
+//                return bitmapDrawable.getBitmap();
+//            }
+//        }
 
         if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
             bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
@@ -72,7 +76,9 @@ public class ImageUtil {
         return bitmap;
     }
 
-    public static Bitmap getRoundedContactBitmap(Context context, Contact contact) {
+
+
+    public static Bitmap getRoundedBitmap(Context context, Contact contact) {
         Drawable drawable = getDrawableFromUri(context, contact.getImageUri());
         Bitmap bitmap = drawableToBitmap(drawable);
         RoundedBitmapDrawable roundedBitmapDrawable = getCircularDrawable(context, bitmap);
