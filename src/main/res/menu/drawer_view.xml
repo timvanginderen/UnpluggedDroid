@@ -19,7 +19,8 @@
         <item
             android:id="@+id/nav_home"
             android:title="Home"
-            android:checked="true"/>
+            android:checked="true"
+            android:icon="@drawable/ic_launcher"/>
         <item
             android:id="@+id/nav_settings"
             android:title="Settings" />

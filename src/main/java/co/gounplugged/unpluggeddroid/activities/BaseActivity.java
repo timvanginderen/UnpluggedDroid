@@ -172,7 +172,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     private void addConversationToSubMenu(Conversation conversation) {
         mConversationSubMenu.add(NAVIGATION_GROUP_ID_CONVERSATIONS, Menu.NONE, mConversationSubMenu.size(), conversation.getName());
         MenuItem item  = mConversationSubMenu.getItem(mConversationSubMenu.size() - 1);
-        item.setIcon(ImageUtil.getDrawableFromUri(getApplicationContext(), conversation.getParticipant().getImageUri()));
+//        item.setIcon(ImageUtil.getDrawableFromUri(getApplicationContext(), conversation.getParticipant().getImageUri()));
+//        if (conversation.getParticipant().getLookupKey() != null)
+//            item.setIcon(ImageUtil.bitmapToDrawable(getApplicationContext(), ImageUtil.getContactAvatar(getApplicationContext(), conversation.getParticipant().getLookupKey())));
+
+        item.setIcon(R.drawable.ic_launcher);
         Intent intent = ChatActivity.newLaunchIntent(getApplicationContext());
         intent.putExtra(EXTRA_CONVERSATION_ID, conversation.getId());
         item.setIntent(intent);

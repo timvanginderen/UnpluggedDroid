@@ -43,9 +43,9 @@ public class NotificationHelper {
 
 //        Bitmap bmp = ImageUtil.getRoundedContactBitmap(context, participant);
 
-        Bitmap bmp = getAvatar(context, participant.getLookupKey());
+        Bitmap bmp = ImageUtil.getContactAvatar(context, participant.getLookupKey());
 
-        Bitmap bitmap = ImageUtil.getCircularBitmap(context, bmp);
+//        Bitmap bitmap = ImageUtil.getCircularBitmap(context, bmp);
 
 
 //        Bitmap bmp = null;
@@ -68,7 +68,7 @@ public class NotificationHelper {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_launcher)
-                .setLargeIcon(bitmap)
+                .setLargeIcon(bmp)
                 .setContentTitle("Message from " + participant.getName())
                 .setContentText(message.getText())
                 .setContentIntent(resultPendingIntent)
@@ -79,87 +79,5 @@ public class NotificationHelper {
     }
 
 
-    public static Bitmap getAvatar(Context context, String lookupKey){
-        Uri uri = getDataUri(context, lookupKey);
-        if (uri == null){
-            return null;
-        }
-        Cursor cursor = context.getContentResolver().query(
-                uri,
-                new String[] {ContactsContract.Data.DATA15},
-                null,
-                null,
-                null
-        );
-        if (cursor == null){
-            return null;
-        }
-        try{
-            if (cursor.moveToFirst()){
-                byte [] bytes = cursor.getBlob(0);
-                InputStream inputStream = new ByteArrayInputStream(bytes);
-                return BitmapFactory.decodeStream(inputStream);
-            }
-        } finally {
-            cursor.close();
-        }
-        return null;
-    }
 
-    public static Uri getDataUri(Context context, String lookupKey){
-        Cursor cursor = context.getContentResolver().query(
-                Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey),
-                new String[] {ContactsContract.Contacts.PHOTO_ID},
-                null,
-                null,
-                null
-        );
-        if (cursor == null){
-            return null;
-        }
-        try {
-            if (cursor.moveToFirst()){
-                long id = cursor.getLong(0);
-
-                /**http://developer.android.com/reference/android/provider/ContactsContract.ContactsColumns.html#PHOTO_ID
-                 * If PHOTO_ID is null, consult PHOTO_URI or PHOTO_THUMBNAIL_URI,
-                 * which is a more generic mechanism for referencing the contact photo,
-                 * especially for contacts returned by non-local directories (see ContactsContract.Directory).
-                 */
-
-                if (id == 0){
-                    if (Build.VERSION.SDK_INT < 11){
-                        return null;
-                    }
-                    return getPhotoThumbnailUri(context, lookupKey);
-                }
-                return ContentUris.withAppendedId(ContactsContract.Data.CONTENT_URI, id);
-            }
-        } finally {
-            cursor.close();
-        }
-        return null;
-    }
-
-    //Available only for API level 11+
-    public static Uri getPhotoThumbnailUri(Context context, String lookupKey){
-        Cursor cursor = context.getContentResolver().query(
-                Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey),
-                new String[] {ContactsContract.Contacts.PHOTO_THUMBNAIL_URI},
-                null,
-                null,
-                null
-        );
-        if (cursor == null){
-            return null;
-        }
-        try{
-            if (cursor.moveToFirst()){
-                return Uri.parse(cursor.getString(0));
-            }
-        } finally {
-            cursor.close();
-        }
-        return null;
-    }
 }
